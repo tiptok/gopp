@@ -3,9 +3,9 @@ package repository
 import (
 	"fmt"
 	"github.com/tiptok/gocomm/common"
-	"github.com/tiptok/gopp/orm/internal/domain"
 	"github.com/tiptok/gopp/orm/pgorm/pg/models"
 	"github.com/tiptok/gopp/orm/pgorm/pg/transaction"
+	"github.com/tiptok/gopp/pkg/domain"
 )
 
 type GormUsersRepository struct {

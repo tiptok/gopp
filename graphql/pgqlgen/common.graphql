@@ -1,0 +1,32 @@
+scalar Date
+
+directive @goModel(model: String, models: [String!]) on OBJECT
+  | INPUT_OBJECT
+#  gqlgen doesnt currently support
+#  | SCALAR
+#  | ENUM
+#  | INTERFACE
+#  | UNION
+
+directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION
+  | FIELD_DEFINITION
+
+type Todo {
+  id: ID!
+  text: String!
+  done: Boolean!
+  #user: Users!
+}
+#
+type Query {
+  todos: [Todo!]!
+}
+#
+input NewTodo {
+  text: String!
+  userId: String!
+}
+
+type Mutation {
+  createTodo(input: NewTodo!): Todo!
+}

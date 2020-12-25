@@ -1,0 +1,62 @@
+type Users @goModel(model: "github.com/tiptok/gopp/pkg/domain.Users") {
+    id: ID!
+    name: String
+    phone: String
+    roles: [Role!] @goField(forceResolver: true)
+    status: Int
+    adminType: Int
+    createTime: Date
+    updateTime: Date
+}
+
+type ListUser {
+    total: Int!
+    users: [Users!]
+}
+
+# user query input
+input getUsersQuery @goModel(model: "github.com/tiptok/gopp/pkg/protocol/user.GetUserRequest") {
+    id: Int
+}
+input listUsersQuery @goModel(model: "github.com/tiptok/gopp/pkg/protocol/user.ListUserRequest") {
+    limit: Int
+    offset: Int
+    searchByText: String
+    sortById: String
+}
+
+# user command input
+input createUsersCommand @goModel(model: "github.com/tiptok/gopp/pkg/protocol/user.CreateUserRequest"){
+    name: String
+    phone: String
+    passwd: String
+    roles: [Int!]
+    adminType: Int
+}
+input removeUsersCommand @goModel(model: "github.com/tiptok/gopp/pkg/protocol/user.DeleteUserRequest"){
+    id: Int
+}
+input updateUsersCommand @goModel(model: "github.com/tiptok/gopp/pkg/protocol/user.UpdateUserRequest"){
+    id: Int
+    phone: String
+    passwd: String
+    roles: [Int!]
+    status: Int
+    adminType: Int
+}
+
+extend type Query {
+    user(input: getUsersQuery): Users!
+    users(input: listUsersQuery):ListUser!
+}
+extend type Mutation {
+    createUsers(input: createUsersCommand):Users!
+    removeUsers(input: removeUsersCommand):Users!
+    updateUsers(input: updateUsersCommand):Users!
+}
+
+
+type Role{
+    id: Int
+    roleName: String
+}

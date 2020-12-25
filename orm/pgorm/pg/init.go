@@ -2,8 +2,8 @@ package pg
 
 import (
 	"fmt"
-	"github.com/tiptok/gopp/orm/internal/constant"
 	"github.com/tiptok/gopp/orm/pgorm/pg/models"
+	"github.com/tiptok/gopp/pkg/constant"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

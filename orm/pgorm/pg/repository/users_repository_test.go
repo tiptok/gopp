@@ -2,10 +2,10 @@ package repository
 
 import (
 	"github.com/tiptok/gocomm/common"
-	"github.com/tiptok/gopp/orm/internal/domain"
 	"github.com/tiptok/gopp/orm/pgorm/pg"
 	_ "github.com/tiptok/gopp/orm/pgorm/pg"
 	"github.com/tiptok/gopp/orm/pgorm/pg/transaction"
+	"github.com/tiptok/gopp/pkg/domain"
 	"testing"
 	"time"
 )
