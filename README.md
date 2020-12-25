@@ -3,6 +3,10 @@ gopp is a go project to practice open source lib
 
 ## sumary
 
+### graphql
+
+- [x] gqlgen ( [pg](https://github.com/99designs/gqlgen) )
+
 ### orm
 
 - [ ] pg-go/pg ( [pg](github.com/pg-go/pg/v10) )
