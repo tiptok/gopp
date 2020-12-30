@@ -1,0 +1,14 @@
+{
+  "Name": "protocol.user",
+  "Log": {
+    "Mode": "volume"
+  },
+  "ListenOn": "localhost:3450",
+  "Etcd": {
+    "Hosts": [
+      "localhost:2379"
+    ],
+    "Key": "zrpc"
+  }
+}
+

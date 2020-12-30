@@ -17,3 +17,6 @@
 
 *.idea
 *.sum
+
+# protoc
+*.pb.go

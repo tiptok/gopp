@@ -14,6 +14,6 @@ gopp is a go project to practice open source lib
 
 ### rpc 
 
-- [ ] pzrpc  ( [zrpc](github.com/tal-tech/go-zero/zrpc) )
+- [x] pzrpc  ( [zrpc](github.com/tal-tech/go-zero/zrpc) )
 - [ ] pgrpc  ( [grpc](google.golang.org/grpc) )
 

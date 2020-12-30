@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package protocol;
+
+//  protoc -I. --go_out=plugins=grpc:. users.proto
+
+message getUsersReq {
+int64 id = 1;
+}
+message getUsersResp {
+  User  user =1;
+}
+
+message createUserReq {
+  string name = 1;
+  string phone = 2;
+}
+message createUserResp {
+  User  user =1;
+}
+
+message updateUserReq {
+  string name = 1;
+  string phone = 2;
+}
+message updateUserResp {
+  User  user =1;
+}
+
+message removeUsersReq {
+  int64 id = 1;
+}
+message removeUsersResp {
+  User  user =1;
+}
+
+message listUserReq {
+  int64 offset = 1;
+  int64 limit = 2;
+}
+message listUserResp {
+  int64 total = 1;
+  repeated User users = 2;
+}
+
+message User{
+  int64 id = 1;
+  string name = 2;
+  string phone = 3;
+  int32  status = 4;
+  int32  adminType = 5;
+  int64  createTime = 6;
+  int64  updateTime = 7;
+  repeated int64 roles = 8;
+}
+
+service user {
+rpc getUser(getUsersReq) returns(getUsersResp);
+rpc createUser(createUserReq) returns(createUserResp);
+rpc updateUser(updateUserReq) returns(updateUserResp);
+rpc removeUser(removeUsersReq) returns(removeUsersResp);
+rpc listUser(listUserReq) returns(listUserResp);
+}
