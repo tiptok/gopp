@@ -8,6 +8,8 @@ require (
 	github.com/astaxie/beego v1.10.0
 	github.com/gin-gonic/gin v1.5.0
 	github.com/golang/protobuf v1.4.2
+	github.com/graphql-go/graphql v0.7.9
+	github.com/graphql-go/handler v0.2.3
 	github.com/tal-tech/go-zero v1.1.1
 	github.com/tiptok/gocomm v1.0.5
 	github.com/vektah/gqlparser/v2 v2.1.0

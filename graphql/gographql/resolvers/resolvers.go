@@ -1,0 +1,5 @@
+package resolvers
+
+func InitResolvers() {
+
+}

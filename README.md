@@ -5,7 +5,8 @@ gopp is a go project to practice open source lib
 
 ### graphql
 
-- [x] gqlgen ( [pg](https://github.com/99designs/gqlgen) )
+- [x] gqlgen ( [gqlgen](https://github.com/99designs/gqlgen) )
+- [x] graphql-go  graphql+handler  ([graphql](https://github.com/graphql-go/graphql) )
 
 ### orm
 
