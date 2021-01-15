@@ -1,6 +1,6 @@
 ## 一、快速开始
 
-### 初始化
+### 1.1 初始化
 ```
 需要提前安装 gqlgen(https://github.com/99designs/gqlgen) 到go/bin目录
 install gqlgen
@@ -14,8 +14,146 @@ $ gplgen generate
 
 [官方文档-快速开始](https://gqlgen.com/getting-started/)
 
+#### gqlgen使用原理
 
-### 自定义字段rosolvers
+gqlgen 通过自带 **generate** 命令 根据配置文件**gqlgen.yml** 以及自定义的 ***.graphql文件（schema描述**），自动生成graphql解析服务，无需关心底层的graphql解析过程，只需要完善 resolver的相关逻辑
+
+#### 项目文件目录
+
+```
+./
+  /generated
+       generated.go          gqlgen生成文件
+  /model
+       models_gen.go         gqlgen生成文件（模型）
+  /resovers
+       user.resovers.go      gqlgen生成 解析器（逻辑）  
+  /user
+       user.graphql          schema描述文件
+  gqlgen.yml                 gqlgen配置
+```
+
+
+
+#### gqlgen.yml文件解析
+
+```
+# Where are all the schema files located? globs are supported eg  src/**/*.graphqls
+# 配置schema描述文件
+schema:
+  - ./*.graphql
+  - ./user/*.graphql
+
+# Where should the generated server code go?
+# 配置生成代码的路径
+exec:
+  filename: generated/generated.go
+  package: generated
+
+# Uncomment to enable federation
+# federation:
+#   filename: graph/generated/federation.go
+#   package: generated
+
+# Where should any generated models go?
+# 配置生成模型的路径
+model:
+  filename: model/models_gen.go
+  package: model
+
+# Where should the resolver implementations go?
+# 配置解析器路径  当前配置在./resolvers文件夹底下 包名 resolvers
+resolver:
+  layout: follow-schema
+  dir: resolvers
+  package: resolvers
+
+# Optional: turn on use `gqlgen:"fieldName"` tags in your models
+# struct_tag: json
+
+# Optional: turn on to use []Thing instead of []*Thing
+# omit_slice_element_pointers: false
+
+# Optional: set to speed up generation time by not performing a final validation pass.
+# skip_validation: true
+
+# gqlgen will search for any type names in the schema in these go packages
+# if they match it will use them, otherwise it will generate them.
+# 如果该目录下已经定义了model将复用，不会再动态生成到 models_gen.go去
+autobind:
+  - "github.com/tiptok/gopp/graphql/pgqlgen/model"
+
+# This section declares type mapping between the GraphQL and go type systems
+#
+# The first line in each type will be used as defaults for resolver arguments and
+# modelgen, the others will be allowed when binding to fields. Configure them to
+# your liking
+# 自定义schemal 类型 需要实现graphQL to  go的序列化接口
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Date:
+    model: github.com/Laisky/laisky-blog-graphql/types.Datetime
+
+```
+
+
+
+#### graphql文件解析
+
+文件 user.graphql
+
+```
+type Users @goModel(model: "github.com/tiptok/gopp/pkg/domain.Users") {
+    id: ID!
+    name: String
+    phone: String
+    roles: [Role!] @goField(forceResolver: true)
+    status: Int
+    adminType: Int
+    createTime: Date
+    updateTime: Date
+}
+
+type ListUser {
+    total: Int!
+    users: [Users!]
+}
+
+# user query input
+input getUsersQuery @goModel(model: "github.com/tiptok/gopp/pkg/protocol/user.GetUserRequest") {
+    id: Int
+}
+input listUsersQuery @goModel(model: "github.com/tiptok/gopp/pkg/protocol/user.ListUserRequest") {
+    limit: Int
+    offset: Int
+    searchByText: String
+    sortById: String
+}
+
+extend type Query {
+    user(input: getUsersQuery): Users!
+    users(input: listUsersQuery):ListUser!
+}
+#extend type Mutation {
+#    createUsers(input: createUsersCommand):Users!
+#    removeUsers(input: removeUsersCommand):Users!
+#    updateUsers(input: updateUsersCommand):Users!
+#}
+```
+
+
+
+### 1.2 自定义字段rosolvers
 
 延后查询 roles字段
 ```
@@ -87,7 +225,7 @@ type Users @goModel(model: "github.com/tiptok/gopp/pkg/domain.Users") {
 
 
 
-### 分割 schemal.resovers.go 到多个文件
+### 1.3 分割 schemal.resovers.go 到多个文件
 
 系统初始化的schemal.graphqls 文件，我们只需要把新的模型建立到新的graphqls文件中去，例如：
 新建/user/users.graphqls 根目录执行 ==gqlgen generate==,会生成对应的
@@ -101,7 +239,8 @@ schema:
 ```
 
 
-### shememal.graphqls文件太大
+
+### 1.4 shememal.graphqls文件太大
 
 分离schemal文件到自定义 custome.graphqls文件中去
 通过extend关键字，扩展Query 和 Mutation，就不需要把所有的方法都放一个graphql文件里面声明
@@ -116,7 +255,8 @@ extend type Mutation {
 ```
 
 
-### 复用已经声明的模型
+
+### 1.5 复用已经声明的模型
 
 方法一
 
@@ -205,6 +345,17 @@ func (d Datetime) MarshalGQL(w io.Writer) {
 
 使用标签 @goModel
 ```
+directive @goModel(model: String, models: [String!]) on OBJECT
+  | INPUT_OBJECT
+#  gqlgen doesnt currently support
+#  | SCALAR
+#  | ENUM
+#  | INTERFACE
+#  | UNION
+
+directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION
+  | FIELD_DEFINITION
+
 type Todo @goModel(model: "github.com/NateScarlet/issue-repro/model.Todo") {
   id: ID!
   text: String!
