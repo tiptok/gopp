@@ -41,6 +41,8 @@ func init() {
 	if !constant.DISABLE_CREATE_TABLE {
 		for _, model := range []interface{}{
 			(*models.Users)(nil),
+			(*models.SysMessageConsume)(nil),
+			(*models.SysMessageProduce)(nil),
 		} {
 			err := db.AutoMigrate(model)
 			if err != nil {
