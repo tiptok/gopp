@@ -12,7 +12,7 @@ require (
 	github.com/graphql-go/graphql v0.7.9
 	github.com/graphql-go/handler v0.2.3
 	github.com/tal-tech/go-zero v1.1.1
-	github.com/tiptok/gocomm v1.0.6
+	github.com/tiptok/gocomm v1.0.7
 	github.com/vektah/gqlparser/v2 v2.1.0
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.25.0
@@ -21,5 +21,5 @@ require (
 )
 
 replace (
-	github.com/tiptok/gocomm v1.0.6  => F:\go\src\learn_project\gocomm
+	github.com/tiptok/gocomm v1.0.7  => F:\go\src\learn_project\gocomm
 )

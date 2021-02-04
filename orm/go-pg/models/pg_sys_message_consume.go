@@ -8,7 +8,7 @@ type SysMessageConsume struct {
 	//	主题
 	Topic string
 	//	分区信息
-	Partition int
+	Partition int `pg:",use_zero"`
 	//	消息偏移序号
 	Offset int64
 	//	键值

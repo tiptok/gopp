@@ -8,7 +8,7 @@ type SysMessageProduce struct {
 	//	主题
 	Topic string
 	//	分区信息
-	Partition int
+	Partition int `pg:",use_zero"`
 	//	消息内容
 	Value string
 	//	消息时间
