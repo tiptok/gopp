@@ -8,13 +8,13 @@ import (
 	. "github.com/tiptok/gocomm/pkg/orm/pgx"
 	"github.com/tiptok/gopp/orm/go-pg/models"
 	"github.com/tiptok/gopp/orm/go-pg/transaction"
+	"github.com/tiptok/gopp/pkg/constant"
 	"github.com/tiptok/gopp/pkg/domain"
 )
 
 var (
 	cacheRoleIdKey = func(id int64) string {
-		//return fmt.Sprintf("%v:cache:Role:id:%v", constant.POSTGRESQL_DB_NAME, id)
-		return ""
+		return fmt.Sprintf("%v:cache:Role:id:%v", constant.POSTGRESQL_DB_NAME, id)
 	}
 )
 
