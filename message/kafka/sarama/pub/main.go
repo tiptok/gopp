@@ -19,6 +19,7 @@ func main() {
 	producer := broker.NewMessageProducer(
 		models.WithKafkaHost(constant.KAFKA_HOSTS),
 		models.WithMessageProduceRepository(local.NewPgMessageProduceRepository(go_pg.DB, nil)),
+		models.WithVersion("0.10.2.1"),
 	)
 	// 手动组装消息发送
 	//messages:=[]*models.Message{

@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	saramaConsumer := kafkax.NewSaramaConsumer(constant.KAFKA_HOSTS, constant.ServiceName)
+	saramaConsumer := kafkax.NewSaramaConsumer(constant.KAFKA_HOSTS, constant.ServiceName, models.WithVersion("0.10.2.1"))
 	saramaConsumer.WithTopicHandler(constant.TopicUserLogin, UserLoginHandler)
 	saramaConsumer.WithMessageReceiver(local.NewPgMessageReceiverRepository(go_pg.DB, nil)) // 持久化
 
