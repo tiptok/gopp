@@ -12,6 +12,9 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/graphql-go/graphql v0.7.9
 	github.com/graphql-go/handler v0.2.3
+	github.com/opentracing/opentracing-go v1.1.1-0.20190913142402-a7454ce5950e
+	github.com/openzipkin-contrib/zipkin-go-opentracing v0.4.5
+	github.com/openzipkin/zipkin-go v0.2.2
 	github.com/tal-tech/go-zero v1.1.1
 	github.com/tiptok/gocomm v1.0.9
 	github.com/vektah/gqlparser/v2 v2.1.0
