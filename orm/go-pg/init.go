@@ -29,7 +29,7 @@ func init() {
 			(*models.SysMessageConsume)(nil),
 			(*models.SysMessageProduce)(nil),
 		} {
-			err := DB.CreateTable(model, &orm.CreateTableOptions{
+			err := DB.Model(model).CreateTable(&orm.CreateTableOptions{
 				Temp:          false,
 				IfNotExists:   true,
 				FKConstraints: true,

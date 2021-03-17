@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	cacheUsersIdKey = func(id int64) string {
-		return fmt.Sprintf("%v:cache:Users:id:%v", constant.POSTGRESQL_DB_NAME, id)
+	cacheUsersIdKey = func(v interface{}) string {
+		return fmt.Sprintf("%v:cache:Users:id:%v", constant.POSTGRESQL_DB_NAME, v)
 	}
 )
 
@@ -32,14 +32,14 @@ func (repository *UsersRepository) Save(dm *domain.Users) (*domain.Users, error)
 		return nil, err
 	}
 	if dm.Identify() == nil {
-		if err = tx.Insert(m); err != nil {
+		if _, err = tx.Model(m).Insert(m); err != nil {
 			return nil, err
 		}
 		dm.Id = m.Id
 		return dm, nil
 	}
 	queryFunc := func() (interface{}, error) {
-		return nil, tx.Update(m)
+		return tx.Model(m).Update(m)
 	}
 	if _, err = repository.Query(queryFunc, cacheUsersIdKey(dm.Id)); err != nil {
 		return nil, err
