@@ -4,7 +4,7 @@ import "os"
 
 var REDIS_HOST = "127.0.0.1"
 var REDIS_PORT = "6379"
-var REDIS_AUTH = "123456"
+var REDIS_AUTH = ""
 
 func init() {
 	if os.Getenv("REDIS_HOST") != "" {

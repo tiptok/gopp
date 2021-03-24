@@ -21,7 +21,7 @@ require (
 	github.com/openzipkin/zipkin-go v0.2.2
 	github.com/stretchr/testify v1.7.0
 	github.com/tal-tech/go-zero v1.1.1
-	github.com/tiptok/gocomm v1.0.9
+	github.com/tiptok/gocomm v1.0.11
 	github.com/vektah/gqlparser/v2 v2.1.0
 	golang.org/x/mod v0.3.1-0.20200828183125-ce943fd02449 // indirect
 	google.golang.org/grpc v1.29.1
@@ -30,4 +30,4 @@ require (
 	gorm.io/gorm v1.20.1
 )
 
-//replace github.com/tiptok/gocomm v1.0.9 => F:\go\src\learn_project\gocomm
+replace github.com/tiptok/gocomm v1.0.11 => F:\go\src\learn_project\gocomm

@@ -7,7 +7,7 @@ import (
 
 type CreateUserRequest struct {
 	// 名称
-	Name string `json:"name,omitempty"`
+	Name string `json:"name,omitempty" `
 	// 地址
 	Address string `json:"address,omitempty"`
 	// 手机号

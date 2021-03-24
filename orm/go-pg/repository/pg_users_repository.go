@@ -39,7 +39,7 @@ func (repository *UsersRepository) Save(dm *domain.Users) (*domain.Users, error)
 		return dm, nil
 	}
 	queryFunc := func() (interface{}, error) {
-		return tx.Model(m).Update(m)
+		return tx.Model(m).WherePK().Update(m)
 	}
 	if _, err = repository.Query(queryFunc, cacheUsersIdKey(dm.Id)); err != nil {
 		return nil, err

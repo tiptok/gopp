@@ -7,7 +7,7 @@ import (
 
 type GetUserRequest struct {
 	// 唯一标识
-	Id int64 `json:"id,omitempty"`
+	Id int64 `json:"id,omitempty" path:"userId"`
 }
 
 func (GetUserRequest *GetUserRequest) ValidateCommand() error {
