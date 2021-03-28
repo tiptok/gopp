@@ -6,13 +6,11 @@ import (
 )
 
 type ListUserRequest struct {
-	SearchByText string `json:"searchByText,omitempty"` //按名称搜索
-	//PageSize     int    `json:"pageSize" valid:"Required"`
-	PageNumber int `json:"pageNumber" valid:"Required"`
-
-	Offset   int    `json:"offset"`
-	Limit    int    `json:"limit"`
-	SortById string `json:"sortById"`
+	SearchByText string `json:"searchByText,omitempty"  form:"searchByText,optional"` //按名称搜索
+	PageNumber   int    `json:"pageNumber,omitempty" valid:"Required" form:"pageNumber,optional"`
+	Offset       int    `json:"offset,omitempty"  form:"offset,optional"`
+	Limit        int    `json:"limit,omitempty"  form:"limit,optional"`
+	SortById     string `json:"sortById,omitempty"`
 }
 
 func (ListUserRequest *ListUserRequest) ValidateCommand() error {

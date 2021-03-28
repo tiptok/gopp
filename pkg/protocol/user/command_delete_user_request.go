@@ -7,7 +7,7 @@ import (
 
 type DeleteUserRequest struct {
 	// 唯一标识
-	Id int64 `json:"id,omitempty"`
+	Id int64 `json:"id,omitempty" path:"userId"`
 }
 
 func (DeleteUserRequest *DeleteUserRequest) ValidateCommand() error {

@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	cacheRoleIdKey = func(id int64) string {
-		return fmt.Sprintf("%v:cache:Role:id:%v", constant.POSTGRESQL_DB_NAME, id)
+	cacheRoleIdKey = func(v interface{}) string {
+		return fmt.Sprintf("%v:cache:Role:id:%v", constant.POSTGRESQL_DB_NAME, v)
 	}
 )
 
@@ -33,7 +33,7 @@ func (repository *RoleRepository) Save(dm *domain.Role) (*domain.Role, error) {
 		return nil, err
 	}
 	if dm.Identify() == nil {
-		if err = tx.Insert(m); err != nil {
+		if _, err = tx.Model(m).Insert(m); err != nil {
 			return nil, err
 		}
 		dm.Id = m.Id

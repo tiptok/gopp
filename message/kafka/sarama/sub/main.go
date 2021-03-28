@@ -12,7 +12,13 @@ import (
 )
 
 func main() {
-	saramaConsumer := kafkax.NewSaramaConsumer(constant.KAFKA_HOSTS, constant.ServiceName, models.WithVersion("0.10.2.1"))
+	store := local.NewRedisMessageStore("gopp", constant.REDIS_HOST+":"+constant.REDIS_PORT, "")
+
+	saramaConsumer := kafkax.NewSaramaConsumer(
+		constant.KAFKA_HOSTS, constant.ServiceName,
+		models.WithVersion("0.10.2.1"),
+		models.WithConsumeRetryOption(3, 30, store),
+	)
 	saramaConsumer.WithTopicHandler(constant.TopicUserLogin, UserLoginHandler)
 	saramaConsumer.WithMessageReceiver(local.NewPgMessageReceiverRepository(go_pg.DB, nil)) // 持久化
 
@@ -22,6 +28,8 @@ func main() {
 	}
 }
 
+var value = 0
+
 func UserLoginHandler(message interface{}) error {
 	msg, ok := message.(*models.Message)
 	if ok {
@@ -30,6 +38,10 @@ func UserLoginHandler(message interface{}) error {
 		log.Info("消费消息:", msg.Id, msg.Topic, msg.Value)
 		log.Info("登录用户信息:", user.Id, user.Name)
 	}
-	//return fmt.Errorf("handler user login error ->> unix: %v",time.Now().Unix())
+	//if value<2{
+	//	value ++
+	//	return fmt.Errorf("handler user login error ->> id: %v",msg.Id)
+	//}
 	return nil
+	//return nil
 }
