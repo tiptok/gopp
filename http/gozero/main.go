@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"github.com/tal-tech/go-zero/core/conf"
+	"github.com/tal-tech/go-zero/core/logx"
 	"github.com/tal-tech/go-zero/rest"
+	"github.com/tiptok/gocomm/pkg/log"
 	"github.com/tiptok/gopp/http/gozero/routers"
 	_ "github.com/tiptok/gopp/pkg/redis"
 )
@@ -15,10 +17,13 @@ func main() {
 	var restConf rest.RestConf
 	flag.Parse()
 	conf.MustLoad(*configFile, &restConf)
+
+	log.InitGzLog(logx.LogConf{ServiceName: "gopp", Mode: "file"})
+
 	server := rest.MustNewServer(restConf)
 	server.AddRoutes(routers.ServerRouter.Routers)
 	defer server.Stop()
 
-	fmt.Printf("Starting server at %s:%d...\n", restConf.Host, restConf.Port)
+	log.Info(fmt.Sprintf("Starting server at %s:%d...\n", restConf.Host, restConf.Port))
 	server.Start()
 }

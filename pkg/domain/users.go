@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"fmt"
+	"github.com/tiptok/gopp/pkg/constant"
+	"time"
+)
 
 const (
 	UserAdmin = iota + 1
@@ -41,6 +45,10 @@ func (m *Users) Identify() interface{} {
 		return nil
 	}
 	return m.Id
+}
+
+func (m *Users) CacheKey() string {
+	return fmt.Sprintf("%v:cache:users:id:%v", constant.POSTGRESQL_DB_NAME, m.Id)
 }
 
 func (m *Users) Update(data map[string]interface{}) error {

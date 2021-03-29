@@ -7,7 +7,7 @@ import (
 	"github.com/tal-tech/go-zero/core/conf"
 	"github.com/tal-tech/go-zero/zrpc"
 	"github.com/tiptok/gocomm/pkg/log"
-	"github.com/tiptok/gopp/rpc/pzrpc/protocol"
+	"github.com/tiptok/gopp/rpc/pzrpc/protobuf"
 	"github.com/tiptok/gopp/rpc/pzrpc/server/handler"
 	"google.golang.org/grpc"
 	"time"
@@ -22,7 +22,7 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	server := zrpc.MustNewServer(c, func(grpcServer *grpc.Server) {
-		protocol.RegisterUserServer(grpcServer, handler.NewUserServer())
+		protobuf.RegisterUserServer(grpcServer, handler.NewUserServer())
 	})
 	interceptor := func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		st := time.Now()

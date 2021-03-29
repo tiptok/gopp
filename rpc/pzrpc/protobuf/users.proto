@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package protocol;
+package protobuf;
 
 //  protoc -I. --go_out=plugins=grpc:. users.proto
 

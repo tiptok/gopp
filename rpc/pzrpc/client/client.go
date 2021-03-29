@@ -8,7 +8,7 @@ import (
 	"github.com/tal-tech/go-zero/zrpc"
 	"github.com/tiptok/gocomm/common"
 	"github.com/tiptok/gocomm/pkg/log"
-	"github.com/tiptok/gopp/rpc/pzrpc/protocol"
+	"github.com/tiptok/gopp/rpc/pzrpc/protobuf"
 )
 
 func main() {
@@ -21,9 +21,9 @@ func main() {
 		},
 	})
 	conn := client.Conn()
-	userClient := protocol.NewUserClient(conn)
+	userClient := protobuf.NewUserClient(conn)
 
-	resp, err := userClient.GetUser(context.Background(), &protocol.GetUsersReq{
+	resp, err := userClient.GetUser(context.Background(), &protobuf.GetUsersReq{
 		Id: 1,
 	})
 	if err == nil {
