@@ -1,19 +1,17 @@
 package main
 
 import (
-	"context"
 	"flag"
-	"fmt"
 	"github.com/tal-tech/go-zero/core/conf"
 	"github.com/tal-tech/go-zero/zrpc"
-	"github.com/tiptok/gocomm/pkg/log"
 	"github.com/tiptok/gopp/rpc/pzrpc/protobuf"
 	"github.com/tiptok/gopp/rpc/pzrpc/server/handler"
 	"google.golang.org/grpc"
-	"time"
+	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/config.json", "the config file")
+//var configFile = flag.String("f", "etc/config.json", "the config file")
+var configFile = flag.String("f", "etc/pzrpc.yaml", "the config file")
 
 func main() {
 	flag.Parse()
@@ -23,14 +21,16 @@ func main() {
 
 	server := zrpc.MustNewServer(c, func(grpcServer *grpc.Server) {
 		protobuf.RegisterUserServer(grpcServer, handler.NewUserServer())
+		reflection.Register(grpcServer)
 	})
-	interceptor := func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-		st := time.Now()
-		resp, err = handler(ctx, req)
-		log.Info(fmt.Sprintf("method: %s time: %v\n", info.FullMethod, time.Since(st)))
-		return resp, err
-	}
 
-	server.AddUnaryInterceptors(interceptor)
+	//interceptor := func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	//	st := time.Now()
+	//	resp, err = handler(ctx, req)
+	//	log.Info(fmt.Sprintf("method: %s time: %v\n", info.FullMethod, time.Since(st)))
+	//	return resp, err
+	//}
+	//
+	//server.AddUnaryInterceptors(interceptor)
 	server.Start()
 }

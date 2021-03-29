@@ -27,6 +27,6 @@ func main() {
 		Id: 1,
 	})
 	if err == nil {
-		log.Info(fmt.Sprintf("get user :", common.AssertString(resp)))
+		log.Info(fmt.Sprintf("get user :%v", common.AssertString(resp)))
 	}
 }

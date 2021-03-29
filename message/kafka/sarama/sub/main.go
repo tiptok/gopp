@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/tiptok/gocomm/common"
 	"github.com/tiptok/gocomm/pkg/broker/kafkax"
 	"github.com/tiptok/gocomm/pkg/broker/local"
@@ -38,10 +39,10 @@ func UserLoginHandler(message interface{}) error {
 		log.Info("消费消息:", msg.Id, msg.Topic, msg.Value)
 		log.Info("登录用户信息:", user.Id, user.Name)
 	}
-	//if value<2{
-	//	value ++
-	//	return fmt.Errorf("handler user login error ->> id: %v",msg.Id)
-	//}
+	if value < 2 {
+		value++
+		return fmt.Errorf("handler user login error ->> id: %v", msg.Id)
+	}
 	return nil
 	//return nil
 }
