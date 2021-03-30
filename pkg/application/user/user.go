@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"github.com/tiptok/gocomm/common"
+	"github.com/tiptok/gocomm/gs"
 	"github.com/tiptok/gocomm/pkg/log"
 	go_pg "github.com/tiptok/gopp/orm/go-pg"
 	"github.com/tiptok/gopp/orm/go-pg/repository"
@@ -145,7 +146,7 @@ func (svr *UserService) GetUser(header *protocol.RequestHeader, request *protoco
 		}
 	}
 	retMap["roles"] = common.LoadCustomField(roles, "Id", "RoleName")
-	rsp = map[string]interface{}{"user": retMap}
+	rsp = (gs.MapData)(map[string]interface{}{"user": retMap})
 	if err = transactionContext.CommitTransaction(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
@@ -236,15 +237,15 @@ func (svr *UserService) ListUser(header *protocol.RequestHeader, request *protoc
 	}
 	userList := make([]map[string]interface{}, 0)
 	for _, v := range user {
-		item := map[string]interface{}{"id": v.Id, "name": v.Name, "phone": v.Phone, "adminType": v.AdminType, "status": v.Status, "createTime": v.CreateTime.Local().Format("2006-01-02 15:04:05")}
+		item := map[string]interface{}{"id": v.Id, "name": v.Name, "phone": v.Phone, "adminType": v.AdminType, "status": v.Status, "createTime": v.CreateTime.Local().Format("2006-01-02 15:04:05")} //v.CreateTime.Local().Format("2006-01-02 15:04:05")
 		item["roles"] = getRoles(v.Roles)
 		userList = append(userList, item)
 	}
 
 	rsp = map[string]interface{}{
-		"totalRow":   total,
-		"pageNumber": request.PageNumber,
-		"lists":      userList,
+		"total": total,
+		//"pageNumber": request.PageNumber,
+		"users": userList,
 	}
 	if err = transactionContext.CommitTransaction(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())

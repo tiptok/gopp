@@ -4,8 +4,9 @@ import (
 	"flag"
 	"github.com/tal-tech/go-zero/core/conf"
 	"github.com/tal-tech/go-zero/zrpc"
-	"github.com/tiptok/gopp/rpc/pzrpc/protobuf"
-	"github.com/tiptok/gopp/rpc/pzrpc/server/handler"
+	"github.com/tiptok/gopp/pkg/protobuf/user"
+	_ "github.com/tiptok/gopp/pkg/redis"
+	"github.com/tiptok/gopp/rpc/pzrpc/server/controller"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -20,7 +21,7 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	server := zrpc.MustNewServer(c, func(grpcServer *grpc.Server) {
-		protobuf.RegisterUserServer(grpcServer, handler.NewUserServer())
+		user.RegisterUserServer(grpcServer, controller.NewUserController())
 		reflection.Register(grpcServer)
 	})
 

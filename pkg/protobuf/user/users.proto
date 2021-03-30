@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package protobuf;
+package user;
 
 //  protoc -I. --go_out=plugins=grpc:. users.proto
 
@@ -20,8 +20,9 @@ message createUserResp {
 }
 
 message updateUserReq {
-  string name = 1;
-  string phone = 2;
+  int64 id = 1;
+  string name = 2;
+  string phone = 3;
 }
 message updateUserResp {
   User  user =1;
@@ -49,9 +50,14 @@ message User{
   string phone = 3;
   int32  status = 4;
   int32  adminType = 5;
-  int64  createTime = 6;
-  int64  updateTime = 7;
-  repeated int64 roles = 8;
+  string  createTime = 6;
+  string  updateTime = 7;
+  repeated Role roles = 8;
+}
+
+message Role{
+  int64 id = 1;
+  string name = 2;
 }
 
 service user {

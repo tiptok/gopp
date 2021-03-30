@@ -12,6 +12,7 @@ gopp is a go project to practice open source lib
 
 - [x] beego框架
 - [x] gin框架
+- [x] go-zero
 
 ### message 消息队列
 
@@ -19,7 +20,7 @@ gopp is a go project to practice open source lib
   - [x] sarama 基于sarama实现
 
 ### nosql 内存数据库
-- [ ] goRedisNode (go-redis node 单节点)
+- [x] goRedisNode (go-redis node 单节点)
 - [ ] goRedisCluster (go-redis cluster集群访问)
 
 
@@ -36,5 +37,11 @@ gopp is a go project to practice open source lib
 ### rpc 远程调用
 
 - [x] pzrpc  ( [zrpc](github.com/tal-tech/go-zero/zrpc) )
-- [ ] pgrpc  ( [grpc](google.golang.org/grpc) )
+- [x] pgrpc  ( [grpc](google.golang.org/grpc) )
 
+### tracing
+
+- [x] ptrace (program tracing)
+- [x] ptrace-http (http tracing)
+- [ ] ptrace-rpc
+- [x] pzipkin-opentracing(trace report to zipkin)

@@ -6,7 +6,7 @@ import (
 )
 
 type UpdateUserRequest struct {
-	Id int64 `json:"-" valid:"Required" path:"userId"`
+	Id int64 `json:"id" valid:"Required" path:"userId"`
 	// 名称
 	Name string `json:"name,omitempty"`
 	// 地址

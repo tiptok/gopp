@@ -7,7 +7,7 @@ import (
 
 type ListUserRequest struct {
 	SearchByText string `json:"searchByText,omitempty"  form:"searchByText,optional"` //按名称搜索
-	PageNumber   int    `json:"pageNumber,omitempty" valid:"Required" form:"pageNumber,optional"`
+	PageNumber   int    `json:"pageNumber,omitempty"  form:"pageNumber,optional"`     //valid:"Required"
 	Offset       int    `json:"offset,omitempty"  form:"offset,optional"`
 	Limit        int    `json:"limit,omitempty"  form:"limit,optional"`
 	SortById     string `json:"sortById,omitempty"`
