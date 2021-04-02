@@ -9,6 +9,7 @@ int64 id = 1;
 }
 message getUsersResp {
   User  user =1;
+  string Host =2;
 }
 
 message createUserReq {

@@ -11,7 +11,7 @@ var exprNumberTable = [][]Expr{
 		{OpChar: Eq, Value: []interface{}{100}},
 		{OpChar: Eq, Value: []interface{}{500}},
 		{OpChar: Range, Value: []interface{}{50, 200}},
-		{OpChar: LessThan, Value: []interface{}{Infinity, 50}},
+		{OpChar: LessThanEqual, Value: []interface{}{Infinity, 50}},
 		{OpChar: Range, Value: []interface{}{60, 100}},
 		{OpChar: Range, Value: []interface{}{60, 70}},
 	},
@@ -26,12 +26,12 @@ var exprNumberTable = [][]Expr{
 var exprDateTable = [][]Expr{
 	[]Expr{
 		{OpChar: Range, Value: []interface{}{1611731000, 1611735000}},
-		{OpChar: LessThan, Value: []interface{}{Infinity, 1611721000}},
+		{OpChar: LessThanEqual, Value: []interface{}{Infinity, 1611721000}},
 		{OpChar: Range, Value: []interface{}{1611734000, 1611737000}},
 	},
 	[]Expr{
 		{OpChar: Range, Value: []interface{}{1611731000, 1611735000}},
-		{OpChar: LessThan, Value: []interface{}{Infinity, 1611721000}},
+		{OpChar: LessThanEqual, Value: []interface{}{Infinity, 1611721000}},
 		{OpChar: Range, Value: []interface{}{1611734000, 1611737000}},
 		{OpChar: Recent, Value: []interface{}{5}},
 	},
@@ -79,7 +79,7 @@ func TestSortExprList(t *testing.T) {
 	rec := RangeNumberExprCompute{valueType: ValueNumber}
 	expr := exprNumberTable[0]
 	for i := range expr {
-		if expr[i].OpChar == Range || expr[i].OpChar == LessThan || expr[i].OpChar == MoreThan {
+		if expr[i].OpChar == Range || expr[i].OpChar == LessThanEqual || expr[i].OpChar == GreaterThanEqual {
 			rec.expr = append(rec.expr, expr[i])
 		}
 	}

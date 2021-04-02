@@ -21,6 +21,7 @@ require (
 	github.com/tal-tech/go-zero v1.1.1
 	github.com/tiptok/gocomm v1.0.11
 	github.com/vektah/gqlparser/v2 v2.1.0
+	go.etcd.io/etcd v3.3.13+incompatible
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.25.0
 	gorm.io/driver/postgres v1.0.1

@@ -8,11 +8,16 @@ import (
 )
 
 type UserController struct {
+	Host string
 	Base
 }
 
-func NewUserController() *UserController {
-	return &UserController{}
+func NewUserController(host ...string) *UserController {
+	initHost := ""
+	if len(host) > 0 {
+		initHost = host[0]
+	}
+	return &UserController{Host: initHost}
 }
 func (controller *UserController) GetUser(ctx context.Context, req *user.GetUsersReq) (*user.GetUsersResp, error) {
 	var (
@@ -26,6 +31,7 @@ func (controller *UserController) GetUser(ctx context.Context, req *user.GetUser
 		return nil, err
 	}
 	controller.JsonUnmarshal(resp, response)
+	resp.Host = controller.Host
 	return resp, nil
 }
 func (controller *UserController) CreateUser(ctx context.Context, req *user.CreateUserReq) (*user.CreateUserResp, error) {

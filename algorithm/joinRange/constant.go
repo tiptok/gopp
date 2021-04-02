@@ -65,13 +65,16 @@ const Infinity = -1
 const day = 60 * 60 * 24
 
 const (
-	Eq       OpType = "="
-	LessThan OpType = "<="
-	MoreThan OpType = ">="
-	Range    OpType = "range"
-	In       OpType = "in"
-	Like     OpType = "like"
-	Recent   OpType = "recent" // 近几天
+	Eq               OpType = "="      //eq
+	LessThanEqual    OpType = "<="     //le
+	GreaterThanEqual OpType = ">="     //ge
+	Range            OpType = "range"  //range
+	In               OpType = "in"     //in
+	Like             OpType = "like"   //like
+	Recent           OpType = "recent" //recent 近几天
+	LessThan         OpType = "<"      //lt
+	GreaterThan      OpType = ">"      //gt
+	NotEqual         OpType = "<>"     //ne
 )
 
 func (er ExprResult) NumberCompare(expr Expr) bool {
@@ -129,7 +132,7 @@ func NewInExprCompute(expr []Expr, valueType ValueType) exprCompute {
 func NewRangeExprCompute(expr []Expr, valueType ValueType) exprCompute {
 	rec := RangeNumberExprCompute{valueType: valueType}
 	for i := range expr {
-		if expr[i].OpChar == Range || expr[i].OpChar == LessThan || expr[i].OpChar == MoreThan {
+		if expr[i].OpChar == Range || expr[i].OpChar == LessThanEqual || expr[i].OpChar == GreaterThanEqual || expr[i].OpChar == LessThan || expr[i].OpChar == GreaterThan {
 			rec.expr = append(rec.expr, expr[i])
 		}
 	}

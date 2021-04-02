@@ -2,11 +2,11 @@ package constant
 
 import "os"
 
-var POSTGRESQL_DB_NAME = "godevp"
+var POSTGRESQL_DB_NAME = "godevp" //godevpmycat
 var POSTGRESQL_USER = "postgres"
 var POSTGRESQL_PASSWORD = "123456"
 var POSTGRESQL_HOST = "127.0.0.1"
-var POSTGRESQL_PORT = "5432"
+var POSTGRESQL_PORT = "5432" //""8066
 var DISABLE_CREATE_TABLE = false
 var DISABLE_SQL_GENERATE_PRINT = false
 
