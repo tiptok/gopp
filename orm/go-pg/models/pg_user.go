@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // Users
 type Users struct {
@@ -23,4 +26,11 @@ type Users struct {
 	CreateTime time.Time
 	// 更新时间
 	UpdateTime time.Time
+}
+
+func (m *Users) CacheKeyFunc() string {
+	if m.Id == 0 {
+		return ""
+	}
+	return fmt.Sprintf("%v:cache:users:id:%v", "gopp", m.Id)
 }

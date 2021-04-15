@@ -74,10 +74,11 @@ func (repository *RoleRepository) FindOne(queryOptions map[string]interface{}) (
 		return RoleModel, nil
 	}
 	var options []cache.QueryOption
-	if _, ok := queryOptions["id"]; !ok {
-		options = append(options, cache.WithNoCacheFlag())
+	var cacheModel = new(models.Role)
+	if v, ok := queryOptions["id"]; ok {
+		cacheModel.Id = v.(int64)
 	}
-	if err := repository.QueryCache(cacheRoleIdKey(queryOptions["id"].(int64)), RoleModel, queryFunc, options...); err != nil {
+	if err := repository.QueryCache(cacheModel.CacheKeyFunc, RoleModel, queryFunc, options...); err != nil {
 		return nil, err
 	}
 

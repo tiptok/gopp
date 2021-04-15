@@ -41,7 +41,7 @@ func main() {
 	}
 	defer lis.Close()
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor())
 	user.RegisterUserServer(grpcServer, controller.NewUserController(addr))
 	reflection.Register(grpcServer)
 

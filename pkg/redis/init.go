@@ -16,6 +16,6 @@ func init() {
 	}
 	cache.InitDefault(
 		cache.WithDefaultRedisPool(redis.GetRedisPool()),
-		cache.WithDebugLog(true, log.DefaultLog),
+		cache.WithDebugLog(true, log.Logger),
 	)
 }

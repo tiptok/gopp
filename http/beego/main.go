@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/astaxie/beego"
+	beego "github.com/beego/beego/v2/server/web"
 	"github.com/tiptok/gocomm/pkg/mybeego"
 	"github.com/tiptok/gocomm/pkg/myrest/handler"
 	_ "github.com/tiptok/gopp/http/beego/routers"

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego/context"
+	"github.com/beego/beego/v2/server/web/context"
 	"github.com/tiptok/gocomm/common"
 	"github.com/tiptok/gocomm/pkg/mybeego"
 	"github.com/tiptok/gopp/pkg/protocol"

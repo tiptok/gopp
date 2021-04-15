@@ -41,7 +41,7 @@ func (repository *UsersRepository) Save(dm *domain.Users) (*domain.Users, error)
 	queryFunc := func() (interface{}, error) {
 		return tx.Model(m).WherePK().Update(m)
 	}
-	if _, err = repository.Query(queryFunc, cacheUsersIdKey(dm.Id)); err != nil {
+	if _, err = repository.Query(queryFunc, m.CacheKeyFunc()); err != nil {
 		return nil, err
 	}
 	return dm, nil
@@ -55,7 +55,7 @@ func (repository *UsersRepository) Remove(User *domain.Users) (*domain.Users, er
 	queryFunc := func() (interface{}, error) {
 		return tx.Model(UserModel).Where("id = ?", User.Id).Delete()
 	}
-	if _, err := repository.Query(queryFunc, cacheUsersIdKey(User.Id)); err != nil {
+	if _, err := repository.Query(queryFunc, UserModel.CacheKeyFunc()); err != nil {
 		return User, err
 	}
 	return User, nil
@@ -73,13 +73,11 @@ func (repository *UsersRepository) FindOne(queryOptions map[string]interface{}) 
 		}
 		return UserModel, nil
 	}
-	var options []cache.QueryOption
-	if _, ok := queryOptions["id"]; !ok {
-		options = append(options, cache.WithNoCacheFlag())
-	} else {
-		UserModel.Id = queryOptions["id"].(int64)
+	cacheModel := new(models.Users)
+	if _, ok := queryOptions["id"]; ok {
+		cacheModel.Id = queryOptions["id"].(int64)
 	}
-	if err := repository.QueryCache(cacheUsersIdKey(UserModel.Id), UserModel, queryFunc, options...); err != nil {
+	if err := repository.QueryCache(cacheModel.CacheKeyFunc, UserModel, queryFunc); err != nil {
 		return nil, err
 	}
 

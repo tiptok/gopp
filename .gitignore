@@ -19,4 +19,4 @@
 *.sum
 
 # protoc
-*.pb.go
+#*.pb.go

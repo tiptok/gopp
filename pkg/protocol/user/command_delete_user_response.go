@@ -2,7 +2,7 @@ package user
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/validation"
+	"github.com/beego/beego/v2/core/validation"
 )
 
 type DeleteUserResponse struct {
