@@ -44,5 +44,4 @@ func UserLoginHandler(message interface{}) error {
 		return fmt.Errorf("handler user login error ->> id: %v", msg.Id)
 	}
 	return nil
-	//return nil
 }

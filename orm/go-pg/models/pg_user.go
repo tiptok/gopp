@@ -21,9 +21,9 @@ type Users struct {
 	// 1启用  2禁用
 	Status int
 	// 管理员类型 1:超级管理员  2：普通账号
-	AdminType int
+	AdminType int `pg:"default:2"`
 	// 创建时间
-	CreateTime time.Time
+	CreateTime time.Time `pg:"default:current_timestamp"`
 	// 更新时间
 	UpdateTime time.Time
 }
