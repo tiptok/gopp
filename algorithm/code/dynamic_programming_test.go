@@ -151,3 +151,106 @@ func max(a, b int) int {
 	}
 	return b
 }
+func Test_minPathSum(t *testing.T) {
+	input := [][]int{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}} //{100,4,200,1,2,3}
+	out := minPathSum(input)
+	if out != 7 {
+		t.Fatalf("out : %v except:%v", out, 7)
+	}
+}
+
+// 64.Minimum Path Sum
+// TODO:40 ms, faster than 5.48%
+func minPathSum(grid [][]int) int {
+	if len(grid) == 0 || len(grid[0]) == 0 {
+		return 0
+	}
+	for i := 1; i < len(grid); i++ {
+		grid[i][0] = grid[i][0] + grid[i-1][0]
+	}
+	for j := 1; j < len(grid[0]); j++ {
+		grid[0][j] = grid[0][j] + grid[0][j-1]
+	}
+	for i := 1; i < len(grid); i++ {
+		for j := 1; j < len(grid[i]); j++ {
+			grid[i][j] = min(grid[i][j-1], grid[i-1][j]) + grid[i][j]
+		}
+	}
+	return grid[len(grid)-1][len(grid[0])-1]
+}
+
+// 62. Unique Paths
+func Test_uniquePaths(t *testing.T) {
+	input := struct {
+		m int
+		n int
+	}{
+		m: 3,
+		n: 2,
+	}
+	out := uniquePaths(input.m, input.n)
+	if out != 3 {
+		t.Fatalf("out : %v except:%v", out, 3)
+	}
+}
+func uniquePaths(m int, n int) int {
+	f := make([][]int, m)
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if f[i] == nil {
+				f[i] = make([]int, n)
+			}
+			f[i][j] = 1
+		}
+	}
+	for i := 1; i < m; i++ {
+		for j := 1; j < n; j++ {
+			f[i][j] = f[i-1][j] + f[i][j-1]
+		}
+	}
+	return f[m-1][n-1]
+}
+
+func Test_uniquePathsWithObstacles(t *testing.T) {
+	input := [][]int{{0, 0, 0}, {0, 1, 0}, {0, 0, 0}} //{100,4,200,1,2,3}
+	out := uniquePathsWithObstacles(input)
+	if out != 2 {
+		t.Fatalf("out : %v except:%v", out, 2)
+	}
+}
+// 63. Unique Paths II
+func uniquePathsWithObstacles(obstacleGrid [][]int) int {
+	if len(obstacleGrid) == 0 || len(obstacleGrid[0]) == 0 {
+		return 0
+	}
+	var m = len(obstacleGrid)
+	var n = len(obstacleGrid[0])
+	if obstacleGrid[0][0]==1{
+		return 0
+	}
+	var dp = make([][]int,m)
+	for i:=0; i<m;i++{
+		dp[i] = make([]int, n)
+	}
+	dp[0][0] = 1
+	for i := 1; i < m; i++ {
+		if (dp[i-1][0]==1 && obstacleGrid[i][0]==0){
+			dp[i][0] = 1
+		}
+	}
+	for j := 1; j < n; j++ {
+		if (dp[0][j-1]==1 && obstacleGrid[0][j]==0){
+			dp[0][j] = 1
+		}
+	}
+	for i := 1; i < m; i++ {
+		for j := 1; j <n; j++ {
+			if obstacleGrid[i][j]==1{
+				dp[i][j]=0
+			}else{
+				dp[i][j] = dp[i-1][j] + dp[i][j-1]
+			}
+		}
+	}
+	return dp[m-1][n-1]
+}
