@@ -7,7 +7,7 @@ import (
 
 // Users
 type Users struct {
-	tableName struct{} `pg:"users"`
+	tableName struct{} `pg:"users"` //指定schema `pg:"base.users"`
 	//	唯一标识
 	Id int64
 	//	名称
