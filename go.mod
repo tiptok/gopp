@@ -28,4 +28,4 @@ require (
 	gorm.io/gorm v1.20.1
 )
 
-replace github.com/tiptok/gocomm v1.0.12 => F:\Go\src\learn_project\gocomm
+replace github.com/tiptok/gocomm v1.0.12 => /home/tiptok/go/src/gocomm
