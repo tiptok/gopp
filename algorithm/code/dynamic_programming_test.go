@@ -42,12 +42,12 @@ func dfsMinimumTotal(triangle [][]int, x, y int) int {
 	return hashDFS[x][y]
 }
 
-func min(x, y int) int {
-	if x < y {
-		return x
+	func min(x, y int) int {
+		if x < y {
+			return x
+		}
+		return y
 	}
-	return y
-}
 
 // 方法二:遍历 底部到顶部
 
@@ -282,7 +282,7 @@ func climbStairs(n int) int {
 
 // 55. Jump Game
 func Test_canJump(t *testing.T) {
-	input := []int{3,2,1,0,4}//{2, 3, 1, 1, 4}
+	input := []int{3, 2, 1, 0, 4} //{2, 3, 1, 1, 4}
 	excecpt := false
 	out := canJump2(input)
 	if out != excecpt {
@@ -297,7 +297,7 @@ func canJump(nums []int) bool {
 	}
 	f := make([]bool, len(nums))
 	f[0] = true
- 	for i := 1; i < len(nums); i++ {
+	for i := 1; i < len(nums); i++ {
 		for j := 0; j < i; j++ {
 			if f[j] == true && nums[j]+j >= i {
 				f[i] = true
@@ -307,14 +307,250 @@ func canJump(nums []int) bool {
 	return f[len(nums)-1]
 }
 
-func canJump2(nums []int)bool{
+func canJump2(nums []int) bool {
 	if len(nums) == 0 {
 		return true
 	}
 	var reach = nums[0]
-	i:=0
-	for i=1;i<len(nums) && i<=reach;i++{
-		reach = max(i+nums[i],reach)
+	i := 0
+	for i = 1; i < len(nums) && i <= reach; i++ {
+		reach = max(i+nums[i], reach)
 	}
-	return i==len(nums)
+	return i == len(nums)
+}
+
+// 132.Palindrome Partitioning II  ***
+func Test_minCut(t *testing.T) {
+	input := "aab"
+	excecpt := 1
+	out := minCut(input)
+	if out != excecpt {
+		t.Fatalf("out : %v except:%v", out, excecpt)
+	}
+}
+
+func minCut(s string) int {
+	for len(s) == 0 || len(s) == 1 {
+		return 0
+	}
+	f := make([]int, len(s)+1)
+	f[0] = -1
+	f[1] = 0
+	for i := 1; i <= len(s); i++ {
+		f[i] = i - 1
+		for j := 0; j < i; j++ {
+			if isPalindrome(s, j, i-1) {
+				f[i] = min(f[i], f[j]+1)
+			}
+		}
+	}
+	return f[len(s)]
+}
+
+func isPalindrome(s string, i, j int) bool {
+	for i < j {
+		if s[i] != s[j] {
+			return false
+		}
+		i++
+		j--
+	}
+	return true
+}
+
+// 300. Longest Increasing Subsequence
+func Test_lengthOfLIS(t *testing.T) {
+	input := []int{10, 9, 2, 5, 3, 7, 101, 18}
+	excecpt := 4
+	out := lengthOfLIS(input)
+	if out != excecpt {
+		t.Fatalf("out : %v except:%v", out, excecpt)
+	}
+}
+
+func lengthOfLIS(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+	f := make([]int, len(nums))
+	f[0] = 1
+	for i := 1; i < len(nums); i++ {
+		f[i] = 1
+		for j := 0; j < i; j++ {
+			if nums[j] < nums[i] {
+				f[i] = max(f[i], f[j]+1)
+			}
+		}
+	}
+	result := f[0]
+	for i := 1; i < len(nums); i++ {
+		result = max(result, f[i])
+	}
+	return result
+}
+
+// 139. Longest Increasing Subsequence
+func Test_wordBreak(t *testing.T) {
+	input1 := "bb"
+	input2 := []string{"a", "b", "bbb", "bbbb"}
+	excecpt := true
+	out := wordBreak(input1, input2)
+	if out != excecpt {
+		t.Fatalf("out : %v except:%v", out, excecpt)
+	}
+}
+func wordBreak(s string, wordDict []string) bool {
+	if len(s) == 0 {
+		return true
+	}
+	dict := make(map[string]bool, len(wordDict))
+	val := false
+	for i := 0; i < len(wordDict); i++ {
+		dict[wordDict[i]] = val
+	}
+	f := make([]bool, len(s)+1)
+	f[0] = true
+	for i := 0; i <= len(s); i++ {
+		for j := 0; j < i; j++ {
+			word := string(s[j:i])
+			if _, ok := dict[word]; f[j] && ok {
+				f[i] = true
+				break
+			}
+		}
+	}
+	return f[len(s)]
+}
+
+/***Two Sequences DP***/
+
+// 139. Longest Increasing Subsequence
+// 给定两个字符串 text1 和 text2，返回这两个字符串的最长公共子序列。
+// 一个字符串的 子序列 是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下删除某些字符（也可以不删除任何字符）
+// 后组成的新字符串。 例如，"ace" 是 "abcde" 的子序列，但 "aec" 不是 "abcde" 的子序列。
+// 两个字符串的「公共子序列」是这两个字符串所共同拥有的子序列
+func Test_longestCommonSubsequence(t *testing.T) {
+	table := []struct {
+		input1 string
+		input2 string
+		except int
+	}{
+		// {
+		// 	"psnw",
+		// 	"vozsh",
+		// 	1,
+		// },
+		{
+			"ezupkr",
+			"ubmrapg",
+			2,
+		},
+	}
+	for i := range table {
+		out := longestCommonSubsequence(table[i].input1, table[i].input2)
+		if out != table[i].except {
+			t.Fatalf("out : %v except:%v", out, table[i].except)
+		}
+	}
+}
+func longestCommonSubsequence(a string, b string) int {
+	// dp[i][j] a前i个和b前j个字符最长公共子序列
+	// dp[m+1][n+1]
+	//   ' a d c e
+	// ' 0 0 0 0 0
+	// a 0 1 1 1 1
+	// c 0 1 1 2 1
+	//
+	f := make([][]int, len(a)+1)
+	for i := 0; i <= len(a); i++ {
+		f[i] = make([]int, len(b)+1)
+	}
+	for i := 1; i <= len(a); i++ {
+		for j := 1; j <= len(b); j++ {
+			if a[i-1] == b[j-1] {
+				f[i][j] = f[i-1][j-1] + 1
+			} else {
+				f[i][j] = max(f[i-1][j], f[i][j-1])
+			}
+		}
+	}
+	return f[len(a)][len(b)]
+}
+
+// 72. Edit Distance
+func Test_minDistance(t *testing.T) {
+	table := []struct {
+		input1 string
+		input2 string
+		except int
+	}{
+		{
+			"horse",
+			"ros",
+			3,
+		},
+	}
+	for i := range table {
+		out := minDistance(table[i].input1, table[i].input2)
+		if out != table[i].except {
+			t.Fatalf("out : %v except:%v", out, table[i].except)
+		}
+	}
+}
+func minDistance(a string, b string) int {
+	f := make([][]int, len(a)+1)
+	for i := 0; i <= len(a); i++ {
+		f[i] = make([]int, len(b)+1)
+	}
+	for i := 0; i < len(f); i++ {
+		f[i][0] = i
+	}
+	for j := 0; j < len(f[0]); j++ {
+		f[0][j] = j
+	}
+	for i := 1; i <= len(a); i++ {
+		for j := 1; j <= len(b); j++ {
+			if a[i-1] == b[j-1] {
+				f[i][j] = f[i-1][j-1]
+			} else {
+				// 否则取删除、插入、替换最小操作次数的值+1
+				f[i][j] = min(min(f[i-1][j], f[i][j-1]), f[i-1][j-1]) + 1
+			}
+		}
+	}
+	return f[len(a)][len(b)]
+}
+
+/***零钱和背包***/
+
+// 322.Coin Change  ###				
+//给定不同面额的硬币 coins 和一个总金额 amount。
+//编写一个函数来计算可以凑成总金额所需的最少的硬币个数。
+//如果没有任何一种硬币组合能组成总金额，返回 -1
+func Test_coinChange(t *testing.T) {
+	input1 := []int{1, 2, 5}
+	input2 := 11
+	excecpt := 3
+	out := coinChange(input1, input2)
+	if out != excecpt {
+		t.Fatalf("out : %v except:%v", out, excecpt)
+	}
+}
+func coinChange(coins []int, amount int) int {
+	dp := make([]int, amount+1)
+	for i := 0; i <= amount; i++ {
+		dp[i] = amount + 1
+	}
+	dp[0] = 0
+	for i := 1; i <= amount; i++ {
+		for j := 0; j < len(coins); j++ {
+			if coins[j] <= i {
+				dp[i] = min(dp[i], dp[i-coins[j]]+1)
+			}
+		}
+	}
+	if dp[amount] > amount {
+		return -1
+	}
+	return dp[amount]
 }
