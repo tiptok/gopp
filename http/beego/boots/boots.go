@@ -22,10 +22,10 @@ func init() {
 			handler.WithRequestQueryHashFunc(handler.ComputeHttpRequestQueryHash),
 			handler.WithServiceName(constant.ServiceName),
 			handler.WithCache(nodeCache),
-			handler.WithExpire(360),
+			handler.WithExpire(60),
 			handler.WithRouters([]string{
-				"/user/{userId}",
-				"/user",
+				//"/user/{userId}",
+				//"/user",
 			}),
 		),
 	)
