@@ -46,3 +46,19 @@ func reconstructQueue(people [][]int) [][]int {
 	}
 	return result
 }
+
+
+// 1018
+func prefixesDivBy5(nums []int) []bool {
+    var res []bool 
+    var curVal int
+    for i:=0; i<len(nums);i++{
+        curVal = (curVal << 1 +nums[i])%5
+        if curVal == 0{
+            res = append(res,true)
+        }else{
+            res = append(res,false)
+        }
+    }
+    return res
+}

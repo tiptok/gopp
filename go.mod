@@ -6,6 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.13.0
 	github.com/Laisky/laisky-blog-graphql v0.5.1
 	github.com/beego/beego/v2 v2.0.1
+	github.com/cloudwego/netpoll v0.0.3
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-pg/pg/v10 v10.7.7
 	github.com/go-redis/redis/v8 v8.6.0
