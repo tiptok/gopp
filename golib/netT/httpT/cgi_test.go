@@ -27,7 +27,7 @@ func Test_CGI_Server(t *testing.T) {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func defaultEnv(k,default string)string{
+func defaultEnv(k, d string) string {
 	return ""
 }
 
