@@ -23,10 +23,11 @@ require (
 	github.com/tiptok/gocomm v1.0.12
 	github.com/vektah/gqlparser/v2 v2.1.0
 	go.etcd.io/etcd v3.3.25+incompatible
+	golang.org/x/crypto v0.0.0-20210218145215-b8e89b74b9df
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.25.0
 	gorm.io/driver/postgres v1.0.1
 	gorm.io/gorm v1.20.1
 )
 
-replace github.com/tiptok/gocomm v1.0.12 => /home/tiptok/go/src/gocomm
+replace github.com/tiptok/gocomm v1.0.12 => F:\go\src\learn_project\gocomm
