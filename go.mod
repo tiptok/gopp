@@ -1,6 +1,6 @@
 module github.com/tiptok/gopp
 
-go 1.16
+go 1.18
 
 require (
 	github.com/99designs/gqlgen v0.13.0
@@ -14,7 +14,6 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/graphql-go/graphql v0.7.9
 	github.com/graphql-go/handler v0.2.3
-	github.com/klauspost/compress v1.11.4 // indirect
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/openzipkin-contrib/zipkin-go-opentracing v0.4.5
 	github.com/openzipkin/zipkin-go v0.2.2
@@ -29,4 +28,10 @@ require (
 	gorm.io/gorm v1.20.1
 )
 
-//replace github.com/tiptok/gocomm v1.0.12 => /home/tiptok/go/src/gocomm
+require (
+	github.com/klauspost/compress v1.11.4 // indirect
+	github.com/samber/lo v1.11.0 // indirect
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
+)
+
+replace github.com/tiptok/gocomm v1.0.12 => D:\\Go\src\learn_project\gocomm
