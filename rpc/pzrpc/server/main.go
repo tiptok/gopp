@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"github.com/tal-tech/go-zero/core/conf"
-	"github.com/tal-tech/go-zero/zrpc"
 	"github.com/tiptok/gopp/pkg/protobuf/user"
 	_ "github.com/tiptok/gopp/pkg/redis"
 	"github.com/tiptok/gopp/rpc/pzrpc/server/controller"
+	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"github.com/tal-tech/go-zero/rest/httpx"
 	"github.com/tiptok/gocomm/pkg/log"
 	service "github.com/tiptok/gopp/pkg/application/user"
 	"github.com/tiptok/gopp/pkg/protocol"
 	command "github.com/tiptok/gopp/pkg/protocol/user"
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 )
 

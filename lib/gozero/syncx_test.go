@@ -9,14 +9,14 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tal-tech/go-zero/core/syncx"
 	"github.com/tiptok/gocomm/sync/task"
+	"github.com/zeromicro/go-zero/core/syncx"
 )
 
 // 用途：防止缓存穿透，在并发情况下多次访问数据库，加载缓存，只允许一个线程访问数据库，其他线程共享结果
 func Test_Example_SharedCalls(t *testing.T) {
 	var count int32
-	sharedCalls := syncx.NewSharedCalls()
+	sharedCalls := syncx.NewSingleFlight()
 	c := make(chan string)
 	getValue := func() (interface{}, error) {
 		atomic.AddInt32(&count, 1)

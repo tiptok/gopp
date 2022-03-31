@@ -26,6 +26,7 @@ func init() {
 	if !constant.DISABLE_CREATE_TABLE {
 		for _, model := range []interface{}{
 			(*models.Users)(nil),
+			(*models.Role)(nil),
 			(*models.SysMessageConsume)(nil),
 			(*models.SysMessageProduce)(nil),
 		} {

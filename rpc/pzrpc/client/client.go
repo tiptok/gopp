@@ -4,11 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/tal-tech/go-zero/core/discov"
-	"github.com/tal-tech/go-zero/zrpc"
 	"github.com/tiptok/gocomm/common"
 	"github.com/tiptok/gocomm/pkg/log"
 	"github.com/tiptok/gopp/pkg/protobuf/user"
+	"github.com/zeromicro/go-zero/core/discov"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 func main() {

@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"github.com/tiptok/gocomm/common"
-	"github.com/tiptok/gocomm/gs"
 	"github.com/tiptok/gocomm/pkg/log"
 	go_pg "github.com/tiptok/gopp/orm/go-pg"
 	"github.com/tiptok/gopp/orm/go-pg/repository"
@@ -146,7 +145,8 @@ func (svr *UserService) GetUser(header *protocol.RequestHeader, request *protoco
 		}
 	}
 	retMap["roles"] = common.LoadCustomField(roles, "Id", "RoleName")
-	rsp = (gs.MapData)(map[string]interface{}{"user": retMap})
+	//rsp = (gs.MapData)(map[string]interface{}{"user": retMap})
+	rsp = map[string]interface{}{"user": retMap}
 	if err = transactionContext.CommitTransaction(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
