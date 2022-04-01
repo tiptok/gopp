@@ -82,6 +82,24 @@ func (controller *UserController) GetUser(ctx *context.Context) {
 	msg = protocol.NewResponseMessageData(data, err)
 }
 
+// GetUserByPhone execute query  get  User
+func (controller *UserController) GetUserByPhone(ctx *context.Context) {
+	var (
+		msg *protocol.ResponseMessage
+		svr = service.NewUserService(nil)
+	)
+	defer func() {
+		controller.Resp(ctx, msg)
+	}()
+	phone := ctx.Input.Query(":phone")
+	header := controller.GetRequestHeader(ctx)
+	data, err := svr.GetUserByPhone(header, phone)
+	if err != nil {
+		log.Error(err)
+	}
+	msg = protocol.NewResponseMessageData(data, err)
+}
+
 // DeleteUser
 // DeleteUser execute command  delete  User
 func (controller *UserController) DeleteUser(ctx *context.Context) {

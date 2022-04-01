@@ -9,3 +9,7 @@ import (
 func CreateRoleRepository(transactionContext *transaction.TransactionContext) (domain.RoleRepository, error) {
 	return repository.NewRoleRepository(transactionContext)
 }
+
+func CreateUserRepository(transactionContext *transaction.TransactionContext) (domain.UsersRepository, error) {
+	return repository.NewUserRepository(transactionContext)
+}

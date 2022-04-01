@@ -26,7 +26,7 @@ func (repository *UsersRepository) Save(dm *domain.Users) (*domain.Users, error)
 	var (
 		err error
 		m   = &models.Users{}
-		tx  = repository.transactionContext.PgTx
+		tx  = repository.transactionContext.DB()
 	)
 	if err = common.GobModelTransform(m, dm); err != nil {
 		return nil, err
@@ -49,7 +49,7 @@ func (repository *UsersRepository) Save(dm *domain.Users) (*domain.Users, error)
 
 func (repository *UsersRepository) Remove(User *domain.Users) (*domain.Users, error) {
 	var (
-		tx        = repository.transactionContext.PgTx
+		tx        = repository.transactionContext.DB()
 		UserModel = &models.Users{Id: User.Identify().(int64)}
 	)
 	queryFunc := func() (interface{}, error) {
@@ -62,7 +62,7 @@ func (repository *UsersRepository) Remove(User *domain.Users) (*domain.Users, er
 }
 
 func (repository *UsersRepository) FindOne(queryOptions map[string]interface{}) (*domain.Users, error) {
-	tx := repository.transactionContext.PgDd
+	tx := repository.transactionContext.DB()
 	UserModel := new(models.Users)
 	queryFunc := func() (interface{}, error) {
 		query := NewQuery(tx.Model(UserModel), queryOptions)
@@ -87,8 +87,36 @@ func (repository *UsersRepository) FindOne(queryOptions map[string]interface{}) 
 	return repository.transformPgModelToDomainModel(UserModel)
 }
 
+func (repository *UsersRepository) FindOneByPhone(phone string) (*domain.Users, error) {
+	tx := repository.transactionContext.DB()
+	UserModel := new(models.Users)
+	queryFunc := func() (interface{}, error) {
+		query := NewQuery(tx.Model(UserModel), nil)
+		query.Where("phone = ?", phone)
+		if err := query.First(); err != nil {
+			return nil, fmt.Errorf("query row not found")
+		}
+		return UserModel, nil
+	}
+	cacheModel := new(models.Users)
+	cacheModel.Phone = phone
+	if err := repository.QueryUniqueIndexCache(cacheModel.CachePrimaryKeyFunc, UserModel, func(o interface{}) string {
+		if v, ok := o.(*models.Users); ok {
+			return v.CacheKeyFunc()
+		}
+		return ""
+	}, queryFunc); err != nil {
+		return nil, err
+	}
+
+	if UserModel.Id == 0 {
+		return nil, fmt.Errorf("query row not found")
+	}
+	return repository.transformPgModelToDomainModel(UserModel)
+}
+
 func (repository *UsersRepository) Find(queryOptions map[string]interface{}) (int64, []*domain.Users, error) {
-	tx := repository.transactionContext.PgDd
+	tx := repository.transactionContext.DB()
 	var UserModels []*models.Users
 	Users := make([]*domain.Users, 0)
 	query := NewQuery(tx.Model(&UserModels), queryOptions).

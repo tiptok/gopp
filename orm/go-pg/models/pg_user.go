@@ -34,3 +34,10 @@ func (m *Users) CacheKeyFunc() string {
 	}
 	return fmt.Sprintf("%v:cache:users:id:%v", "gopp", m.Id)
 }
+
+func (m *Users) CachePrimaryKeyFunc() string {
+	if len(m.Phone) == 0 {
+		return ""
+	}
+	return fmt.Sprintf("%v:cache:users:phone:%v", "gopp", m.Phone)
+}

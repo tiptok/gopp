@@ -21,19 +21,19 @@ type UserService struct {
 
 func (svr *UserService) CreateUser(header *protocol.RequestHeader, request *protocolx.CreateUserRequest) (rsp interface{}, err error) {
 	var (
-		transactionContext = transaction.NewPGTransactionContext(go_pg.DB)
+		transactionContext = transaction.NewTransactionContext(go_pg.DB)
 	)
 	rsp = &protocolx.CreateUserResponse{}
 	if err = request.ValidateCommand(); err != nil {
 		//err = application.ThrowError(application.ARG_ERROR, err.Error())
 		return
 	}
-	if err = transactionContext.StartTransaction(); err != nil {
+	if err = transactionContext.Begin(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
 	}
 	defer func() {
-		transactionContext.RollbackTransaction()
+		transactionContext.Rollback()
 	}()
 	newUser := &domain.Users{
 		Name:       request.Name,
@@ -61,7 +61,7 @@ func (svr *UserService) CreateUser(header *protocol.RequestHeader, request *prot
 	} else {
 		rsp = m
 	}
-	if err = transactionContext.CommitTransaction(); err != nil {
+	if err = transactionContext.Commit(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
 	}
@@ -70,19 +70,19 @@ func (svr *UserService) CreateUser(header *protocol.RequestHeader, request *prot
 
 func (svr *UserService) UpdateUser(header *protocol.RequestHeader, request *protocolx.UpdateUserRequest) (rsp interface{}, err error) {
 	var (
-		transactionContext = transaction.NewPGTransactionContext(go_pg.DB)
+		transactionContext = transaction.NewTransactionContext(go_pg.DB)
 	)
 	rsp = &protocolx.UpdateUserResponse{}
 	if err = request.ValidateCommand(); err != nil {
 		//err = application.ThrowError(application.ARG_ERROR, err.Error())
 		return
 	}
-	if err = transactionContext.StartTransaction(); err != nil {
+	if err = transactionContext.Begin(); err != nil {
 		log.Error(err)
 		return nil, err
 	}
 	defer func() {
-		transactionContext.RollbackTransaction()
+		transactionContext.Rollback()
 	}()
 
 	var UserRepository, _ = repository.NewUserRepository(transactionContext) //factory.CreateUserRepository(transactionContext)
@@ -106,7 +106,7 @@ func (svr *UserService) UpdateUser(header *protocol.RequestHeader, request *prot
 		//err = application.ThrowError(application.INTERNAL_SERVER_ERROR, err.Error())
 		return
 	}
-	if err = transactionContext.CommitTransaction(); err != nil {
+	if err = transactionContext.Commit(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
 	}
@@ -115,26 +115,16 @@ func (svr *UserService) UpdateUser(header *protocol.RequestHeader, request *prot
 
 func (svr *UserService) GetUser(header *protocol.RequestHeader, request *protocolx.GetUserRequest) (rsp interface{}, err error) {
 	var (
-		transactionContext = transaction.NewPGTransactionContext(go_pg.DB)
+		transactionContext = transaction.NewTransactionContext(go_pg.DB)
 		RoleRepository, _  = factory.CreateRoleRepository(transactionContext)
 	)
 	rsp = &protocolx.GetUserResponse{}
 	if err = request.ValidateCommand(); err != nil {
-		//err = application.ThrowError(application.ARG_ERROR, err.Error())
 		return
 	}
-	if err = transactionContext.StartTransaction(); err != nil {
-		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
-		return
-	}
-	defer func() {
-		transactionContext.RollbackTransaction()
-	}()
-
-	var UserRepository, _ = repository.NewUserRepository(transactionContext) // factory.CreateUserRepository(transactionContext)
+	var UserRepository, _ = factory.CreateUserRepository(transactionContext) // factory.CreateUserRepository(transactionContext)
 	var user *domain.Users
 	if user, err = UserRepository.FindOne(common.ObjectToMap(request)); err != nil {
-		//err = application.ThrowError(application.INTERNAL_SERVER_ERROR, err.Error())
 		return
 	}
 	retMap := map[string]interface{}{"id": user.Id, "name": user.Name, "phone": user.Phone, "adminType": user.AdminType, "status": user.Status}
@@ -147,28 +137,47 @@ func (svr *UserService) GetUser(header *protocol.RequestHeader, request *protoco
 	retMap["roles"] = common.LoadCustomField(roles, "Id", "RoleName")
 	//rsp = (gs.MapData)(map[string]interface{}{"user": retMap})
 	rsp = map[string]interface{}{"user": retMap}
-	if err = transactionContext.CommitTransaction(); err != nil {
-		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
+	return
+}
+
+func (svr *UserService) GetUserByPhone(header *protocol.RequestHeader, phone string) (rsp interface{}, err error) {
+	var (
+		transactionContext = factory.CreateTransactionContext()
+		roleRepository, _  = factory.CreateRoleRepository(transactionContext)
+		userRepository, _  = factory.CreateUserRepository(transactionContext)
+	)
+	var user *domain.Users
+	if user, err = userRepository.FindOneByPhone(phone); err != nil {
 		return
 	}
+	retMap := map[string]interface{}{"id": user.Id, "name": user.Name, "phone": user.Phone, "adminType": user.AdminType, "status": user.Status}
+	var roles []*domain.Role
+	for _, v := range user.Roles {
+		if role, e := roleRepository.FindOne(map[string]interface{}{"id": v}); e == nil {
+			roles = append(roles, role)
+		}
+	}
+	retMap["roles"] = common.LoadCustomField(roles, "Id", "RoleName")
+	//rsp = (gs.MapData)(map[string]interface{}{"user": retMap})
+	rsp = map[string]interface{}{"user": retMap}
 	return
 }
 
 func (svr *UserService) DeleteUser(header *protocol.RequestHeader, request *protocolx.DeleteUserRequest) (rsp interface{}, err error) {
 	var (
-		transactionContext = transaction.NewPGTransactionContext(go_pg.DB)
+		transactionContext = transaction.NewTransactionContext(go_pg.DB)
 	)
 	rsp = &protocolx.DeleteUserResponse{}
 	if err = request.ValidateCommand(); err != nil {
 		//err = application.ThrowError(application.ARG_ERROR, err.Error())
 		return
 	}
-	if err = transactionContext.StartTransaction(); err != nil {
+	if err = transactionContext.Begin(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
 	}
 	defer func() {
-		transactionContext.RollbackTransaction()
+		transactionContext.Rollback()
 	}()
 
 	var UserRepository, _ = repository.NewUserRepository(transactionContext) //factory.CreateUserRepository(transactionContext)
@@ -182,7 +191,7 @@ func (svr *UserService) DeleteUser(header *protocol.RequestHeader, request *prot
 		return
 	}
 	rsp = user
-	if err = transactionContext.CommitTransaction(); err != nil {
+	if err = transactionContext.Commit(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
 	}
@@ -191,7 +200,7 @@ func (svr *UserService) DeleteUser(header *protocol.RequestHeader, request *prot
 
 func (svr *UserService) ListUser(header *protocol.RequestHeader, request *protocolx.ListUserRequest) (rsp interface{}, err error) {
 	var (
-		transactionContext = transaction.NewPGTransactionContext(go_pg.DB)
+		transactionContext = transaction.NewTransactionContext(go_pg.DB)
 		RoleRepository, _  = factory.CreateRoleRepository(transactionContext)
 	)
 	rsp = &protocolx.ListUserResponse{}
@@ -199,12 +208,12 @@ func (svr *UserService) ListUser(header *protocol.RequestHeader, request *protoc
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
 	}
-	if err = transactionContext.StartTransaction(); err != nil {
+	if err = transactionContext.Begin(); err != nil {
 		log.Error(err)
 		return nil, err
 	}
 	defer func() {
-		transactionContext.RollbackTransaction()
+		transactionContext.Rollback()
 	}()
 
 	getRoles := func(roleIds []int64) string {
@@ -247,7 +256,7 @@ func (svr *UserService) ListUser(header *protocol.RequestHeader, request *protoc
 		//"pageNumber": request.PageNumber,
 		"users": userList,
 	}
-	if err = transactionContext.CommitTransaction(); err != nil {
+	if err = transactionContext.Commit(); err != nil {
 		//err = application.ThrowError(application.TRANSACTION_ERROR, err.Error())
 		return
 	}

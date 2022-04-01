@@ -27,7 +27,7 @@ func (repository *RoleRepository) Save(dm *domain.Role) (*domain.Role, error) {
 	var (
 		err error
 		m   = &models.Role{}
-		tx  = repository.transactionContext.PgTx
+		tx  = repository.transactionContext.DB()
 	)
 	if err = common.GobModelTransform(m, dm); err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (repository *RoleRepository) Save(dm *domain.Role) (*domain.Role, error) {
 
 func (repository *RoleRepository) Remove(Role *domain.Role) (*domain.Role, error) {
 	var (
-		tx        = repository.transactionContext.PgTx
+		tx        = repository.transactionContext.DB()
 		RoleModel = &models.Role{Id: Role.Identify().(int64)}
 	)
 	queryFunc := func() (interface{}, error) {
@@ -63,7 +63,7 @@ func (repository *RoleRepository) Remove(Role *domain.Role) (*domain.Role, error
 }
 
 func (repository *RoleRepository) FindOne(queryOptions map[string]interface{}) (*domain.Role, error) {
-	tx := repository.transactionContext.PgDd
+	tx := repository.transactionContext.DB()
 	RoleModel := new(models.Role)
 	queryFunc := func() (interface{}, error) {
 		query := NewQuery(tx.Model(RoleModel), queryOptions)
@@ -89,7 +89,7 @@ func (repository *RoleRepository) FindOne(queryOptions map[string]interface{}) (
 }
 
 func (repository *RoleRepository) Find(queryOptions map[string]interface{}) (int64, []*domain.Role, error) {
-	tx := repository.transactionContext.PgDd
+	tx := repository.transactionContext.DB()
 	var RoleModels []*models.Role
 	Roles := make([]*domain.Role, 0)
 	query := NewQuery(tx.Model(&RoleModels), queryOptions).

@@ -1,51 +1,64 @@
 package transaction
 
-import "github.com/go-pg/pg/v10"
+import (
+	"github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
+	"sync"
+)
 
 type TransactionContext struct {
-	CloseTransactionFlag bool //事务关闭标识
-	PgDd                 *pg.DB
-	PgTx                 *pg.Tx
+	//启用事务标识
+	beginTransFlag bool
+	rawDb          *pg.DB
+	session        orm.DB
+	lock           sync.Mutex
 }
 
-func (transactionContext *TransactionContext) StartTransaction() error {
-	if transactionContext.CloseTransactionFlag {
-		return nil
-	}
-	tx, err := transactionContext.PgDd.Begin()
+func (transactionContext *TransactionContext) Begin() error {
+	transactionContext.lock.Lock()
+	defer transactionContext.lock.Unlock()
+	transactionContext.beginTransFlag = true
+	tx, err := transactionContext.rawDb.Begin()
 	if err != nil {
 		return err
 	}
-	transactionContext.PgTx = tx
+	transactionContext.session = tx
 	return nil
 }
 
-func (transactionContext *TransactionContext) CommitTransaction() error {
-	if transactionContext.CloseTransactionFlag {
+func (transactionContext *TransactionContext) Commit() error {
+	transactionContext.lock.Lock()
+	defer transactionContext.lock.Unlock()
+	if !transactionContext.beginTransFlag {
 		return nil
 	}
-	err := transactionContext.PgTx.Commit()
-	return err
-}
-
-func (transactionContext *TransactionContext) RollbackTransaction() error {
-	if transactionContext.CloseTransactionFlag {
-		return nil
+	if v, ok := transactionContext.session.(*pg.Tx); ok {
+		err := v.Commit()
+		return err
 	}
-	err := transactionContext.PgTx.Rollback()
-	return err
-}
-
-// SetTransactionClose
-// 在不需要事务的地方可以执行该方法关闭事务处理
-// 例如:对象的查询
-func (transactionContext *TransactionContext) SetTransactionClose() error {
-	transactionContext.CloseTransactionFlag = true
 	return nil
 }
 
-func NewPGTransactionContext(pgDd *pg.DB) *TransactionContext {
+func (transactionContext *TransactionContext) Rollback() error {
+	transactionContext.lock.Lock()
+	defer transactionContext.lock.Unlock()
+	if !transactionContext.beginTransFlag {
+		return nil
+	}
+	if v, ok := transactionContext.session.(*pg.Tx); ok {
+		err := v.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (transactionContext *TransactionContext) DB() orm.DB {
+	return transactionContext.session
+}
+
+func NewTransactionContext(db *pg.DB) *TransactionContext {
 	return &TransactionContext{
-		PgDd: pgDd,
+		rawDb:   db,
+		session: db,
 	}
 }
