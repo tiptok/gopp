@@ -38,6 +38,7 @@ type UsersRepository interface {
 	Remove(dm *Users) (*Users, error)
 	FindOne(queryOptions map[string]interface{}) (*Users, error)
 	FindOneByPhone(phone string) (*Users, error)
+	FindOneByPhoneNoCache(phone string) (*Users, error)
 	Find(queryOptions map[string]interface{}) (int64, []*Users, error)
 }
 

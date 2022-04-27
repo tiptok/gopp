@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/tiptok/gocomm/common"
 	"github.com/tiptok/gocomm/pkg/log"
+	"github.com/tiptok/gocomm/pkg/redis"
 	go_pg "github.com/tiptok/gopp/orm/go-pg"
 	"github.com/tiptok/gopp/orm/go-pg/repository"
 	"github.com/tiptok/gopp/orm/go-pg/transaction"
@@ -140,25 +141,36 @@ func (svr *UserService) GetUser(header *protocol.RequestHeader, request *protoco
 	return
 }
 
-func (svr *UserService) GetUserByPhone(header *protocol.RequestHeader, phone string) (rsp interface{}, err error) {
+func (svr *UserService) GetUserByPhone(header *protocol.RequestHeader, phone string, useCache bool, useCacheDirectly bool) (rsp interface{}, err error) {
 	var (
 		transactionContext = factory.CreateTransactionContext()
-		roleRepository, _  = factory.CreateRoleRepository(transactionContext)
-		userRepository, _  = factory.CreateUserRepository(transactionContext)
+		//roleRepository, _  = factory.CreateRoleRepository(transactionContext)
+		userRepository, _ = factory.CreateUserRepository(transactionContext)
 	)
 	var user *domain.Users
-	if user, err = userRepository.FindOneByPhone(phone); err != nil {
-		return
+	if useCacheDirectly {
+		data, err := redis.Get(fmt.Sprintf("%v:cache:users:phone:%v", "gopp", phone))
+		data, err = redis.Get(fmt.Sprintf("%v:cache:users:phone:%v", "gopp", phone))
+		return data, err
 	}
-	retMap := map[string]interface{}{"id": user.Id, "name": user.Name, "phone": user.Phone, "adminType": user.AdminType, "status": user.Status}
-	var roles []*domain.Role
-	for _, v := range user.Roles {
-		if role, e := roleRepository.FindOne(map[string]interface{}{"id": v}); e == nil {
-			roles = append(roles, role)
+	if useCache {
+		if user, err = userRepository.FindOneByPhone(phone); err != nil {
+			return
+		}
+	} else {
+		if user, err = userRepository.FindOneByPhoneNoCache(phone); err != nil {
+			return
 		}
 	}
-	retMap["roles"] = common.LoadCustomField(roles, "Id", "RoleName")
-	//rsp = (gs.MapData)(map[string]interface{}{"user": retMap})
+
+	retMap := map[string]interface{}{"id": user.Id, "name": user.Name, "phone": user.Phone, "adminType": user.AdminType, "status": user.Status}
+	//var roles []*domain.Role
+	//for _, v := range user.Roles {
+	//	if role, e := roleRepository.FindOne(map[string]interface{}{"id": v}); e == nil {
+	//		roles = append(roles, role)
+	//	}
+	//}
+	//retMap["roles"] = common.LoadCustomField(roles, "Id", "RoleName")
 	rsp = map[string]interface{}{"user": retMap}
 	return
 }

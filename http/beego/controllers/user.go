@@ -93,7 +93,15 @@ func (controller *UserController) GetUserByPhone(ctx *context.Context) {
 	}()
 	phone := ctx.Input.Query(":phone")
 	header := controller.GetRequestHeader(ctx)
-	data, err := svr.GetUserByPhone(header, phone)
+	useCache := true
+	if len(ctx.Input.Query("disable_cache")) > 0 {
+		useCache = false
+	}
+	useCacheDirectly := false
+	if len(ctx.Input.Query("use_cache_directly")) > 0 {
+		useCacheDirectly = true
+	}
+	data, err := svr.GetUserByPhone(header, phone, useCache, useCacheDirectly)
 	if err != nil {
 		log.Error(err)
 	}

@@ -115,6 +115,17 @@ func (repository *UsersRepository) FindOneByPhone(phone string) (*domain.Users, 
 	return repository.transformPgModelToDomainModel(UserModel)
 }
 
+func (repository *UsersRepository) FindOneByPhoneNoCache(phone string) (*domain.Users, error) {
+	tx := repository.transactionContext.DB()
+	UserModel := new(models.Users)
+	query := NewQuery(tx.Model(UserModel), nil)
+	query.Where("phone = ?", phone)
+	if err := query.First(); err != nil {
+		return nil, fmt.Errorf("query row not found")
+	}
+	return repository.transformPgModelToDomainModel(UserModel)
+}
+
 func (repository *UsersRepository) Find(queryOptions map[string]interface{}) (int64, []*domain.Users, error) {
 	tx := repository.transactionContext.DB()
 	var UserModels []*models.Users
