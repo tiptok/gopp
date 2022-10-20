@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 //## https://yuminlee2.medium.com/detect-cycle-in-a-graph-4461b6000845
+//## https://github.com/ClaireLee22/Detect-cycle-in-a-graph
 
 func main() {
 	edges := [][]int{
