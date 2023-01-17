@@ -1,0 +1,53 @@
+<input id="input" type="text" />
+<button onclick="send()">Send</button>
+<button onclick="logoutOfChat()">logout</button>
+<pre id="output"></pre>
+
+<iframe id="chat-frame" src="https://deadsimplechat.com/aB7g0VmIr" width="100%" height="100%"></iframe>
+<script src="https://cdn.deadsimplechat.com/sdk/1.0/dschatsdk.min.js"></script>
+
+
+<script>
+    var input = document.getElementById("input");
+    var output = document.getElementById("output");
+    var socket = new WebSocket("ws://106.52.103.187:38099/echo");
+    var logout = null
+
+    // DSChatSDK construction accepts two parameters:
+    // 1. Chat Room Id
+    // 2. ID of the iFrame tag
+    // 3. Dead Simple Chat Public API Key.
+    const sdk = new DSChatSDK("aB7g0VmIr", "chat-frame", "pub_2d6d746b474b43627075764758614d3130624573714778616a374c7336376a6d6f6575646865367566437342474f516c")
+
+
+    socket.onopen = function () {
+        //output.innerHTML += "Status: Connected\n";
+    };
+
+    socket.onmessage = function (e) {
+        //output.innerHTML += "Server: " + e.data + "\n";
+        sdk.sendMessage(e.data)
+    };
+
+    function send() {
+        socket.send(input.value);
+        input.value = "";
+    }
+
+    (async () => {
+        // Call the connect method to connect the SDK to the Chat iFrame.
+        await sdk.connect();
+        logout = sdk.logout
+
+        sdk.on("message", (message) => {
+            //console.log("new message", message);
+            if (message.message.startsWith("@chatai")){
+                socket.send(message.message);
+            }
+        });
+    })();
+
+    function logoutOfChat (){
+        logout()
+    }
+</script>
