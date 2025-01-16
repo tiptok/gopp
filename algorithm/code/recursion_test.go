@@ -1,6 +1,7 @@
 package code
 
 import (
+	"github.com/tiptok/gopp/algorithm/leetcode/structures"
 	"reflect"
 	"testing"
 )
@@ -47,10 +48,7 @@ func reverseString2(s []byte) {
 }
 
 // 24. Swap Nodes in Pairs
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
+type ListNode = structures.ListNode
 
 func swapPairs(head *ListNode) *ListNode {
 	if head == nil || head.Next == nil {

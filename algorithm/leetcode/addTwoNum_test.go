@@ -39,9 +39,9 @@ func TestAddTwoNum(t *testing.T) {
 	}
 }
 
-//Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
-//Output: 7 -> 0 -> 8
-//Explanation: 342 + 465 = 807.
+// Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+// Output: 7 -> 0 -> 8
+// Explanation: 342 + 465 = 807.
 func AddTwoNum(listA, listB []int) []int {
 	lenA := len(listA)
 	lenB := len(listB)
@@ -93,10 +93,10 @@ func TestAddTwoNumListNode(t *testing.T) {
 	}
 }
 
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
+//type ListNode struct {
+//	Val  int
+//	Next *ListNode
+//}
 
 func NewListNode(val int) *ListNode {
 	return &ListNode{
@@ -108,32 +108,33 @@ func NewListNodes(val ...int) *ListNode {
 	listNode.Add(val...)
 	return listNode.Next
 }
-func (l *ListNode) Add(val ...int) *ListNode {
-	next := l
-	for {
-		if next.Next == nil {
-			for _, v := range val {
-				next.Next = &ListNode{
-					Val: v,
-				}
-				next = next.Next
-			}
-			break
-		}
-		next = next.Next
-	}
-	return l
-}
-func (l *ListNode) PrintResult() string {
-	outBuf := bytes.NewBuffer(nil)
-	for node := l; node != nil; node = node.Next {
-		outBuf.WriteString(fmt.Sprintf("%d", node.Val))
-		if node.Next != nil {
-			outBuf.WriteString(fmt.Sprintf("%s", " -> "))
-		}
-	}
-	return outBuf.String()
-}
+
+//func (l *ListNode) Add(val ...int) *ListNode {
+//	next := l
+//	for {
+//		if next.Next == nil {
+//			for _, v := range val {
+//				next.Next = &ListNode{
+//					Val: v,
+//				}
+//				next = next.Next
+//			}
+//			break
+//		}
+//		next = next.Next
+//	}
+//	return l
+//}
+//func (l *ListNode) PrintResult() string {
+//	outBuf := bytes.NewBuffer(nil)
+//	for node := l; node != nil; node = node.Next {
+//		outBuf.WriteString(fmt.Sprintf("%d", node.Val))
+//		if node.Next != nil {
+//			outBuf.WriteString(fmt.Sprintf("%s", " -> "))
+//		}
+//	}
+//	return outBuf.String()
+//}
 
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	var tmpNode *ListNode = &ListNode{}
